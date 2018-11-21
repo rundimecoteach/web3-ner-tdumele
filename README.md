@@ -134,3 +134,7 @@ On aurait pu créer des patterns en pondérant les différentes entités dans la
 
 # Améliorations possibles
 Pour améliorer ce script, on pourrait créer une liste de mots comprenant toutes les relations de notre ontologie avec toutes les variantes de la langue (est marié, femme de, femme, etc.). Et on vérifiera donc lors de l'étape 2 si un des mots de la phrase est dans la liste et seulement dans ce cas on affiche la phrase comme potentiellement intéressante. Mais pour faire cela il faudrait passer un temps relativement conséquent à la création de cette liste.
+
+# Problèmes rencontrés
+On peut voir dans un premier temps comme dit au dessus, le fait qu'il y a quelques incohérences. De plus bien découper par phrase est compliquer si l'auteur ne respecte pas certaines règles basiques.
+Un deuxième problème est le fait qu'une personne John Doe, ce fera découper en 2 entités PERSON. Et donc le choix des phrases est biaisé dans le cas ou la personne est définie par son nom et son prénom. On aura donc ici une phrase avec potentiellement aucune relation.
