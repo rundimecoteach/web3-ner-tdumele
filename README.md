@@ -5,7 +5,7 @@ Il y a deux scripts présents:
 - main.py
 - exec.py
 
-Le main.py correspond à la première étapes qui ressort toutes les entités nommées. Le execute.py lui correspond à la deuxième étapes qui permet d'avoir les phrases avec les relations pour nous aider à la construction de notre onthologie.
+Le main.py correspond à la première étape qui ressort toutes les entités nommées. Le execute.py lui correspond à la deuxième étape qui permet d'avoir les phrases avec les relations pour nous aider à la construction de notre ontologie.
 
 Pour démarrer le script, il suffit de lancer la commande suivante:
 ```py
@@ -13,11 +13,12 @@ python3.7 main.py
 # ou
 python3.7 execute.py
 ```
-Attention, execute.py est très long, n'hésitez pas à le couper en cours de route, le fichier généré permettra de montrer déjà une grosse partie d'informations.
 > J'utilise cette version mais le script devrait normalement fonctionner avec Python3 en général.
 
+Attention, execute.py est très long, n'hésitez pas à le couper en cours de route, le fichier généré permettra de montrer déjà une grosse partie de l'information récupérée.
+
 - Le fichier __output.txt__ correspond à l'extraction d'informations (étape 1)
-- Le fichier __helpOwl.txt__ correspond à l'aide de création de l'onthologie (étape 2)
+- Le fichier __helpOwl.txt__ correspond à l'aide de création de l'ontologie (étape 2)
 - Le dossier __corpus__ contient les textes à analyser
 
 #### Dépendences
@@ -29,7 +30,7 @@ Attention, execute.py est très long, n'hésitez pas à le couper en cours de ro
 > Récupérer les dernières versions serait préférable
 
 # Etape 1 : voir si mon texte à du sens avec Spacy
-On commence par créer le corpus, pour cela j'ai créé mon dossier corpus dans lequel j'ai placé pour commencer trois textes en anglais (Germinal, Ulysse, et l'Odyssey d'Homère), étant donné que ces trois textes correspondent aux attentes de mon ontologie (relation entre Personnes et Bâtiments). 
+On commence par créer le corpus, pour cela j'ai créé mon dossier corpus dans lequel j'ai placé pour commencer trois textes en anglais (Germinal, Ulysse, et l'Odyssey d'Homère), étant donné que ces trois textes correspondent aux attentes de mon ontologie (relation entre Personnes et Bâtiments(lieu)). 
 
 ## Navigation entre fichiers
 J'ai choisis de ne pas concaténer tous les fichiers pour ne pas devoir allouer trop de mémoire (recommandations  de spacy). Je boucle donc sur tous les fichiers du corpus pour les traiter un à un, et une fois qu'un fichier est fini d'être traité, je concatène la sortie sur __output.txt__.
@@ -55,7 +56,7 @@ import en_core_web_sm
 nlp = en_core_web_sm.load()
 ```
 
-Puis j'utilise un doc de spacy sur lequel je vais extraire les entités nommées (je ne prends que les 100000 caractères de chaque fichier étant données que cela suffit pour mon test. Sinon j'aurai pu découpé les fichiers par 100000 char, mais ici ce serait une perte de temps)
+Puis j'utilise un doc de spacy sur lequel je vais extraire les entités nommées (je ne prends que les 100000 caractères de chaque fichier étant donné que cela suffit pour mon test. Sinon j'aurai pu découper les fichiers par 100000 caractères, mais ici ce serait une perte de temps)
 
 ```py
 doc = nlp(text[:100000])
@@ -100,7 +101,7 @@ Ici, j'arrive donc à récuperer un début d'informations utiles pour la créati
 > On voit ici qu'il y a quand même des erreurs , comme "Greeks", qui est interprété comme une personne et après comme un lieu.
 
 # Etape 2 : Aide pour la création de mon ontologie
-Je vais maintenant boucler sur toutes les phrases et vérifier si la phrases contient un lieu (_GPE_) et un personnage (_PERSON_), je vais ensuite pouvoir utiliser ce "pattern" pour évaluer si une phrase ressemble à ce pattern et donc qu'il y a de grandes chances qu'une relation assez semblable soit présente.
+Je vais maintenant boucler sur toutes les phrases et vérifier si la phrase contient un lieu (_GPE_) et un personnage (_PERSON_), je vais ensuite pouvoir utiliser ce "pattern" pour évaluer si une phrase ressemble à ce pattern et donc qu'il y a de grandes chances qu'une relation assez semblable soit présente.
 
 Pour cela : 
 ```py
@@ -130,11 +131,11 @@ if pres > 1:
     f.close()
 ```
 
-On aurait pu créer des patterns en pondérant les différentes entités dans la phrase, pour par exemple n'afficher que les phrases ayant __pres > 5__ Ce qui permet d'être plus sur d'avoir une phrase intéressante. Si par exemple on ajoute 2 pour une personne et 1 pour un lieu, si on a __pres=5__, on a alors de forte chance que la phrase comprenne 2 PERSON et 1 GPE et donc, on est presque sûr d'avoir une relation dans la phrase. On pourrait alors ne s'intéresser qu'à ces phrases au détriment de perdre des informations.
+On aurait pu créer des patterns en pondérant les différentes entités dans la phrase, pour par exemple n'afficher que les phrases ayant __pres > 5__ Ce qui permet d'être plus sûr d'avoir une phrase intéressante. Si par exemple on ajoute 2 pour une personne et 1 pour un lieu, si on a __pres=5__, on a alors de fortes chances que la phrase contienne 2 PERSON et 1 GPE et donc, on est presque sûr d'avoir une relation dans la phrase. On pourrait alors ne s'intéresser qu'à ces phrases au détriment de perdre des informations.
 
 # Améliorations possibles
 Pour améliorer ce script, on pourrait créer une liste de mots comprenant toutes les relations de notre ontologie avec toutes les variantes de la langue (est marié, femme de, femme, etc.). Et on vérifiera donc lors de l'étape 2 si un des mots de la phrase est dans la liste et seulement dans ce cas on affiche la phrase comme potentiellement intéressante. Mais pour faire cela il faudrait passer un temps relativement conséquent à la création de cette liste.
 
 # Problèmes rencontrés
-On peut voir dans un premier temps comme dit au dessus, le fait qu'il y a quelques incohérences. De plus bien découper par phrase est compliquer si l'auteur ne respecte pas certaines règles basiques.
-Un deuxième problème est le fait qu'une personne John Doe, ce fera découper en 2 entités PERSON. Et donc le choix des phrases est biaisé dans le cas ou la personne est définie par son nom et son prénom. On aura donc ici une phrase avec potentiellement aucune relation.
+On peut voir dans un premier temps comme dit au dessus, le fait qu'il y ai quelques incohérences. De plus bien découper par phrase est compliquer si l'auteur ne respecte pas certaines règles basiques.
+Un deuxième problème est le fait qu'une personne John Doe, ce fera découper en 2 entités PERSON (John et Doe). Et donc le choix des phrases est biaisé dans le cas où la personne est définie par son nom et son prénom en même temps. On aura donc ici une phrase avec potentiellement aucune relation.
