@@ -16,7 +16,7 @@ files = glob.glob("./corpus/*")
 for file in files:
     f = open(file, "r")
     # on split par phrase
-    text = f.read().replace("\n",".").split(". ")
+    text = f.read().replace("\n",". ").split(". ")
     f.close()
     # utilisation de spacy
     for t in text:
